@@ -1,6 +1,5 @@
-package model;
 
-package br.com.fiap.PagPasse.api;
+package model;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
