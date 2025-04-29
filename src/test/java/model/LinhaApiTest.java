@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
-class CartaoTransporteApiTest {
+class LinhaApiTest {
 
     @BeforeAll
     static void setup() {
@@ -20,26 +20,17 @@ class CartaoTransporteApiTest {
     }
 
     @Test
-    @DisplayName("Deve cadastrar um novo Cartão de Transporte com sucesso")
-    void deveCadastrarCartaoComSucesso() {
-        String requestBody = """
-            {
-                "numeroCartao": 1234567890,
-                "tipoCartao": "Comum",
-                "saldoCartao": 50.0,
-                "dataEmissao": "2024-04-01"
-            }
-        """;
+    @DisplayName("Deve buscar uma Linha existente por ID com sucesso")
+    void deveBuscarLinhaComSucesso() {
+        Long linhaId = 1L; // Você pode mudar conforme seu banco de dados de teste
 
         RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(requestBody)
                 .when()
-                .post("/api/cartao-transporte/adicionar")
+                .get("/api/linha/{id}", linhaId)
                 .then()
                 .statusCode(200)
-                .body("numeroCartao", equalTo(1234567890))
-                .body(matchesJsonSchemaInClasspath("schemas/CartaoTransporteSchema.json"));
+                .body("id", equalTo(linhaId.intValue()))
+                .body(matchesJsonSchemaInClasspath("schemas/LinhaSchema.json"));
     }
 }
-

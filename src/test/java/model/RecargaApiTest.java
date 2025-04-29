@@ -8,10 +8,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
-class CartaoTransporteApiTest {
+class RecargaApiTest {
 
     @BeforeAll
     static void setup() {
@@ -20,14 +19,14 @@ class CartaoTransporteApiTest {
     }
 
     @Test
-    @DisplayName("Deve cadastrar um novo Cartão de Transporte com sucesso")
-    void deveCadastrarCartaoComSucesso() {
+    @DisplayName("Deve recusar recarga com valor negativo")
+    void deveRecusarRecargaValorNegativo() {
         String requestBody = """
             {
-                "numeroCartao": 1234567890,
-                "tipoCartao": "Comum",
-                "saldoCartao": 50.0,
-                "dataEmissao": "2024-04-01"
+                "valorRecarga": -10.0,
+                "metodoPagamento": "CartaoCredito",
+                "dataRecarga": "2024-04-10",
+                "status": true
             }
         """;
 
@@ -35,11 +34,8 @@ class CartaoTransporteApiTest {
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .post("/api/cartao-transporte/adicionar")
+                .post("/api/recarga/adicionar")
                 .then()
-                .statusCode(200)
-                .body("numeroCartao", equalTo(1234567890))
-                .body(matchesJsonSchemaInClasspath("schemas/CartaoTransporteSchema.json"));
+                .statusCode(400);
     }
 }
-
