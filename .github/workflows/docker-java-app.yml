@@ -8,7 +8,7 @@ on:
 
 env:
   IMAGE_NAME: image-pagpasse                    # Nome do repositório de imagem
-  REGISTRY_NAME: registropagpasse.azurecr.io       # Seu login server ACR (sem https)
+  REGISTRY_NAME: registropagpasse.azurecr.io       # login server ACR (sem https)
   DOCKERFILE_PATH: ./Dockerfile              # Caminho para o Dockerfile
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # ou sua versão desejada
+          java-version: '17'
 
       - name: Build JAR with Maven
         run: mvn package -Dmaven.test.skip=true
