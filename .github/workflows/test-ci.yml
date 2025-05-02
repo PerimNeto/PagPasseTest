@@ -30,6 +30,9 @@ jobs:
       - name: Start application with Docker Compose
         run: docker-compose up -d
 
+      - name: Aguardar serviço subir
+        run: sleep 30  # Aguarda a aplicação ficar pronta (ajuste se necessário)
+
       - name: Rodar testes automatizados
         run: mvn test
         env:
