@@ -27,5 +27,10 @@ jobs:
         env:
           JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
+      - name: Start application with Docker Compose
+        run: docker-compose up -d
+
       - name: Rodar testes automatizados
         run: mvn test
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
