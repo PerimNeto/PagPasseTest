@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Instalar Java 21
+        id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -23,6 +24,8 @@ jobs:
 
       - name: Buildar projeto com Maven
         run: mvn clean install
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.path }}
 
       - name: Rodar testes automatizados
         run: mvn test
