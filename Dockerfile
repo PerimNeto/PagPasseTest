@@ -1,11 +1,34 @@
-# Etapa 1: Usar uma imagem base do OpenJDK
-FROM openjdk:17-jdk-slim as build
+# Etapa 1: Build - compila o projeto com Maven usando Java 21
+FROM maven:3.9-eclipse-temurin-21 as builder
 
-# Etapa 2: Copiar o arquivo .jar gerado para o contêiner
-COPY target/*.jar PagPasse-0.0.1-SNAPSHOT.jar
+# Define o diretório de trabalho dentro do container
+WORKDIR /app
 
-# Etapa 3: Expor a porta que o aplicativo vai rodar (padrão 8080 no Spring Boot)
+# Copia o arquivo de definição do Maven primeiro (para cache mais eficiente)
+COPY pom.xml .
+
+# Baixa as dependências para acelerar builds futuros
+RUN mvn dependency:go-offline -B
+
+# Agora copia o restante do código
+COPY src ./src
+
+# Compila o projeto e gera o .jar
+RUN mvn clean package -DskipTests
+
+# --------------------------------------------------------------------
+
+# Etapa 2: Runtime - roda a aplicação em uma imagem limpa e leve
+FROM eclipse-temurin:21-jdk-jammy
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Copia o .jar gerado na etapa de build
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expõe a porta padrão (8080)
 EXPOSE 8080
 
-# Etapa 4: Definir o comando de inicialização do contêiner
-ENTRYPOINT ["java", "-jar", "/PagPasse-0.0.1-SNAPSHOT.jar"]
+# Comando para rodar a aplicação
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
