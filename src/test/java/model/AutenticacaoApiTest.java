@@ -5,8 +5,14 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 class AutenticacaoApiTest {
+
+    @Container
+    static GenericContainer<?> app = new GenericContainer<>("eclipse-temurin:21-jdk-jammy")
+            .withExposedPorts(8080);
 
     @BeforeAll
     static void setup() {

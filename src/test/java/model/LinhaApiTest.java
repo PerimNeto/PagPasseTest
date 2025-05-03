@@ -6,11 +6,17 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
 class LinhaApiTest {
+
+    @Container
+    static GenericContainer<?> app = new GenericContainer<>("eclipse-temurin:21-jdk-jammy")
+            .withExposedPorts(8080);
 
     @BeforeAll
     static void setup() {
@@ -24,6 +30,9 @@ class LinhaApiTest {
         Long linhaId = 1L; // Você pode mudar conforme seu banco de dados de teste
 
         RestAssured.given()
+                .auth()
+                .preemptive()
+                .basic("user", "password")
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/api/linha/{id}", linhaId)
